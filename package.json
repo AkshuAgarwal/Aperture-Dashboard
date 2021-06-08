@@ -1,0 +1,22 @@
+{
+  "name": "aperture-dashboard",
+  "version": "1.0.0",
+  "description": "Aperture Dashboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AkshuAgarwal/Aperture-Dashboard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AkshuAgarwal/Aperture-Dashboard/issues"
+  },
+  "homepage": "https://github.com/AkshuAgarwal/Aperture-Dashboard#readme",
+  "dependencies": {
+    "particles.js": "^2.0.0"
+  }
+}
