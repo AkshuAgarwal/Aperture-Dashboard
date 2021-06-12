@@ -9,6 +9,7 @@ support_link = 'https://www.google.com/'
 
 API_ENDPOINT = 'https://discord.com/api'
 TOKEN_URL = 'https://discord.com/api/oauth2/token'
+USER_ENDPOINT = "https://discord.com/api/users/@me"
 CLIENT_ID = 842032214761537589
 CLIENT_SECRET = 'vBZh85gzwO_GORlNZ686kw9F7g1qbX20'
 REDIRECT_URI = 'http://127.0.0.1:8000/callback'
@@ -39,6 +40,14 @@ def use_refresh_token(refresh_token):
     r.raise_for_status()
     return r.json()
 
+def get_user_data(access_token):
+    url = USER_ENDPOINT
+    headers = {"Authorization": f"Bearer {access_token}"}
+    r = requests.get(url=url, headers=headers)
+    r.raise_for_status()
+    return r.json()
+
+
 # Create your views here.
 def index(request):
     try:
@@ -47,16 +56,18 @@ def index(request):
             login_time = datetime.datetime.strptime(request.COOKIES['logintime'], '%Y-%m-%d %H:%M:%S.%f')
             if (datetime.datetime.utcnow() - login_time).seconds < 604000:
                 access_token = request.session['access_token']
+                user_object = get_user_data(access_token)
                 loggedin = True
+                context = {"loggedin": loggedin, "user_data": user_object}
             else:
                 loggedin = False
+                context = {"loggedin": loggedin}
         else:
             loggedin = False
+            context = {"loggedin": loggedin}
     except:
         loggedin = False
-    context = {
-        "loggedin": loggedin
-    }
+        context = {"loggedin": loggedin}
     return render(request, 'index.html', context)
 
 def invite(request):
@@ -65,7 +76,6 @@ def invite(request):
         if time_cookie is not None:
             login_time = datetime.datetime.strptime(request.COOKIES['logintime'], '%Y-%m-%d %H:%M:%S.%f')
             if (datetime.datetime.utcnow() - login_time).seconds < 604000:
-                access_token = request.session['access_token']
                 return redirect(simple_invite_link)
             else:
                 return redirect(login_invite_link)
@@ -96,19 +106,45 @@ def login(request):
 def callback(request):
     response = redirect('/dashboard')
     time_cookie = request.COOKIES.get('logintime')
-    if time_cookie is not None:
-        refresh_token = request.session['refresh_token']
-        refresh_token_response = use_refresh_token(refresh_token)
-        access_token = request.session['access_token'] = refresh_token_response.get('access_token')
-        request.session['refresh_token'] = refresh_token_response.get('refresh_token')
-        response.set_cookie('logintime', datetime.datetime.utcnow())
-    else:
-        code = request.GET.get('code')
-        access_token_response = exchange_code(code)
-        request.session['access_token'] = access_token_response.get('access_token')
-        request.session['refresh_token'] = access_token_response.get('refresh_token')
-        response.set_cookie('logintime', datetime.datetime.utcnow())
+    try:
+        try:
+            if time_cookie is not None:
+                refresh_token = request.session['refresh_token']
+                refresh_token_response = use_refresh_token(refresh_token)
+                access_token = request.session['access_token'] = refresh_token_response.get('access_token')
+                request.session['refresh_token'] = refresh_token_response.get('refresh_token')
+                response.set_cookie('logintime', datetime.datetime.utcnow())
+            else:
+                code = request.GET.get('code')
+                access_token_response = exchange_code(code)
+                request.session['access_token'] = access_token_response.get('access_token')
+                request.session['refresh_token'] = access_token_response.get('refresh_token')
+                response.set_cookie('logintime', datetime.datetime.utcnow())
+        except:
+            code = request.GET.get('code')
+            access_token_response = exchange_code(code)
+            request.session['access_token'] = access_token_response.get('access_token')
+            request.session['refresh_token'] = access_token_response.get('refresh_token')
+            response.set_cookie('logintime', datetime.datetime.utcnow())
+    except:
+        response = redirect('/')
     return response
 
 def dashboard(request):
     return HttpResponse("op")
+
+def logout(request):
+    response = redirect('/')
+    try:
+        time_cookie = request.COOKIES.get('logintime')
+        if time_cookie is not None:
+            response.delete_cookie('logintime')
+            try:
+                request.session.pop('access_token')
+            except:
+                pass
+            return response
+        else:
+            return response
+    except:
+        return response

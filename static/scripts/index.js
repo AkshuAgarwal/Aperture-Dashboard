@@ -4,6 +4,7 @@ const navLink = document.querySelectorAll(".nav-link");
 const mainPage = document.querySelector(".main-page");
 
 const topScrollBtn = document.querySelector(".top-scroll-btn");
+const loginDropdownMenu = document.querySelector(".login-dropdown")
 
 window.onscroll = function() {scrollFunction()};
 
@@ -41,4 +42,8 @@ function topFunction() {
         top: 0,
         behavior: "smooth"
     })
+}
+
+function loginDropdown() {
+    loginDropdownMenu.classList.toggle("show-dropdown");
 }

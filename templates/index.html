@@ -33,7 +33,18 @@
                 </li>
                 <li class="nav-item">
                     {% if loggedin is True %}
-                        <a href="/dashboard" class="nav-link">Dashboard</a>
+                        <button onclick="loginDropdown()" id="login-btn" class="login-btn">
+                            {% if user_data.avatar %}
+                                <img src="https://cdn.discordapp.com/avatars/{{ user_data.id }}/{{ user_data.avatar }}.png?size=1024" alt="Avatar">
+                            {% else %}
+                                <img src="/static/images/default_avatar.png" alt="Avatar">
+                            {% endif %}
+                            <i class="fa">&#xf107;</i>
+                        </button>
+                        <span class="login-dropdown">
+                            <a href="/dashboard" class="login-dropdown-link nav-link">Dashboard</a>
+                            <a href="/logout" class="login-dropdown-link nav-link">Logout</a>
+                        </span>
                     {% else %}
                         <a href="/login" class="nav-link">Login</a>
                     {% endif %}
@@ -51,9 +62,13 @@
                 <br>
                 <h4>A Multi-purpose Discord Bot fulfilling all the needs of a Discord Server in a single Bot</h4>
                 <br>
-                <a href="/invite">
-                    <button class="glow-on-hover" type="button">Invite Now</button>
-                </a>
+                {% if loggedin is True %}
+                        <a href="/invite" target="_blank" rel="noopener">
+                {% else %}
+                        <a href="/invite">
+                {% endif %}
+                        <button class="glow-on-hover" type="button">Invite Now</button>
+                    </a>
             </div>
             <div class="feature feature-left glow-box fun">
                 <div class="feature-image feature-image-left">
@@ -141,13 +156,13 @@
                 </div>
                 <div class="footer-end">
                     <div class="copyright-text">
-                        <p>Copyright &#169; 2021 Aperture. All Rights Reserved</p>
+                        {% comment %} <p>Copyright &#169; 2021 Aperture. All Rights Reserved</p> {% endcomment %}
                     </div>
                 </div>
             </div>
         </footer>
-        <script src="/node_modules/particles.js/particles.js"></script>
-        <script src="/node_modules/particles.js/demo/js/app.js"></script>
+        <script src="/static/particles.js/particles.js"></script>
+        <script src="/static/particles.js/demo/js/app.js"></script>
         <script src="/static/scripts/index.js"></script>
         <script src="https://unpkg.com/wc-discord-message@^2.0.0/dist/wc-discord-message/wc-discord-message.js"></script>
     </body>
