@@ -1,0 +1,108 @@
+#main {
+  margin-top: 150px;
+  margin-bottom: 200px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  position: relative;
+  margin-bottom: 100px;
+}
+
+#main-intro {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 70%;
+  background-color: black;
+  color: #00eeff;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+}
+
+#main-intro h1 {
+  font-size: 50px;
+  margin: 0 0 15px 0;
+}
+
+#main-intro p {
+  font-size: 18px;
+  margin-bottom: 45px;
+  line-height: 30px;
+}
+
+#invite-button {
+  font-size: 25px;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.glow-on-hover {
+  cursor: pointer;
+  position: relative;
+  color: #00eeff;
+  background-color: #2c2f33;
+  border-color: #00eeff;
+}
+
+.glow-on-hover:hover {
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  color: #2c2f33;
+  background-color: #00eeff;
+  border-color: black;
+}
+
+@media only screen and (min-width: 1921px) {
+  #main {
+    margin-top: 250px;
+  }
+  #main-intro {
+    width: 60%;
+    padding: 60px;
+  }
+  #main-intro p {
+    font-size: 25px;
+    margin-bottom: 55px;
+  }
+  #invite-button {
+    font-size: 30px;
+  }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1367px) {
+  #main-intro {
+    width: 52%;
+  }
+}
+
+@media only screen and (min-width: 481px) and (max-width: 769px) {
+  #main-intro {
+    width: 60%;
+  }
+}
+
+@media only screen and (max-width: 481px) {
+  #main-intro {
+    width: 55%;
+  }
+}
+/*# sourceMappingURL=index.css.map */

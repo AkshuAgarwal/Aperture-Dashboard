@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock stylesheets %}
+
+{% block title %}Aperture - Home{% endblock title %}
+
+{% block dropdownitems %}
+<li class="nav-item">
+    <a href="/dashboard" class="nav-link">Dashboard</a>
+</li>
+{% endblock dropdownitems %}
+
+{% block main %}
+<div id="main">
+    <div id="main-intro">
+        <h1>Aperture</h1>
+        <p>A Multi-purpose Discord Bot fulfilling all the needs of a Discord Server in a single Bot</p>
+        <a href="/invite"><button id="invite-button" class="glow-on-hover" type="button">Invite Now</button></a>
+    </div>
+</div>
+{% endblock main %}
+
+{% block scripts %}
+<script src="{% static 'scripts/index.js' %}"></script>
+{% endblock scripts %}

@@ -1,49 +1,19 @@
-const hamburger = document.querySelector(".hamburger");
-const navMenu = document.querySelector(".nav-menu");
-const navLink = document.querySelectorAll(".nav-link");
-const mainPage = document.querySelector(".main-page");
+var hamburger = document.getElementById("nav-right");
+var mainPage = document.getElementById("main");
+var dropdown = document.getElementById("nav-dropdown");
+var dropdownButton = document.getElementById("dropdown-button");
 
-const topScrollBtn = document.querySelector(".top-scroll-btn");
-const loginDropdownMenu = document.querySelector(".login-dropdown")
-
-window.onscroll = function() {scrollFunction()};
-
-hamburger.addEventListener("click", mobileMenu);
-
-function mobileMenu() {
-    hamburger.classList.toggle("active");
-    navMenu.classList.toggle("active");
-    mainPage.classList.toggle("active");
+function hamburgerActivate() {
+    hamburger.classList.toggle('hamburger-activated');
+    mainPage.classList.toggle('hamburger-activated');
 }
 
-navLink.forEach(n => n.addEventListener("click", closeMenu));
-
-function closeMenu() {
-    hamburger.classList.remove("active");
-    navMenu.classList.remove("active");
-    mainPage.classList.remove("active");
+function dropdownActive() {
+    dropdown.classList.toggle("dropdown-active");
 }
 
-function scrollFunction() {
-    if (document.body.scrollTop > 360 || document.documentElement.scrollTop > 360) {
-        topScrollBtn.classList.add("btn-show");
+document.addEventListener("click", function(event) {
+    if (event.target != dropdownButton && event.target != dropdown) {
+        dropdown.classList.remove("dropdown-active");
     }
-    else {
-        topScrollBtn.classList.remove("btn-show");
-    }
-}
-
-function topFunction() {
-    document.body.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    })
-    document.documentElement.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    })
-}
-
-function loginDropdown() {
-    loginDropdownMenu.classList.toggle("show-dropdown");
-}
+}, false);

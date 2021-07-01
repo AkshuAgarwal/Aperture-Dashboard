@@ -1,0 +1,9 @@
+@import "./variables";
+
+body {
+    p {
+        margin: 110px 0 0 20px;
+        color: $txtcolor;
+        line-height: 25px;
+    }
+}

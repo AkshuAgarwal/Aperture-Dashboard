@@ -1,206 +1,96 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scrollbar-width: thin;
-    scrollbar-color: black;
-}
-
-html {
-    font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-    background-color: black;
+  margin: 0;
+  padding: 0;
+  background-color: #2c2f33;
 }
 
-body, html {
-    height: 100%;
+@media only screen and (min-width: 1921px) {
+  body {
+    font-size: 22px;
+  }
 }
 
-body::-webkit-scrollbar {
-    width: 12px;
+@media only screen and (min-width: 1367px) and (max-width: 1921px) {
+  body {
+    font-size: 17px;
+  }
 }
 
-body::-webkit-scrollbar-track {
-    background: black;
+@media only screen and (min-width: 769px) and (max-width: 1367px) {
+  body {
+    font-size: 16px;
+  }
 }
 
-body::-webkit-scrollbar-thumb {
-    background-color: #00eeff;
-    border-radius: 20px;
-    border: 2px solid #2c2f33;
+@media only screen and (min-width: 481px) and (max-width: 769px) {
+  #footer {
+    -webkit-transition: -webkit-transform 0.65s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: -webkit-transform 0.65s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.65s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.65s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.65s cubic-bezier(0.77, 0.2, 0.05, 1);
+  }
+  #main {
+    -webkit-transition: -webkit-transform 0.65s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: -webkit-transform 0.65s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.65s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.65s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.65s cubic-bezier(0.77, 0.2, 0.05, 1);
+  }
+  #main.hamburger-activated {
+    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    -webkit-transform: translateY(250px);
+            transform: translateY(250px);
+  }
+  #main.hamburger-activated ~ #footer {
+    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    -webkit-transform: translateY(250px);
+            transform: translateY(250px);
+  }
+  body {
+    font-size: 15px;
+  }
 }
 
-.top-scroll-btn.glow-on-hover {
-    font-size: 2rem;
-    display: block;
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    z-index: 10;
-    background-color: #2c2f33;
-    color: #00eeff;
-    cursor: pointer;
-    border: none;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
-    transition: opacity 0.3s, visibility 0.3s;
-    opacity: 0;
-    visibility: hidden;
+@media only screen and (max-width: 481px) {
+  #footer {
+    -webkit-transition: -webkit-transform 0.7s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: -webkit-transform 0.7s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.7s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.7s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.7s cubic-bezier(0.77, 0.2, 0.05, 1);
+  }
+  #main {
+    -webkit-transition: -webkit-transform 0.7s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: -webkit-transform 0.7s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.7s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.7s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.7s cubic-bezier(0.77, 0.2, 0.05, 1);
+  }
+  #main.hamburger-activated {
+    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    -webkit-transform: translateY(250px);
+            transform: translateY(250px);
+  }
+  #main.hamburger-activated ~ #footer {
+    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    transition: transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
+    -webkit-transform: translateY(250px);
+            transform: translateY(250px);
+  }
+  body {
+    font-size: 14px;
+  }
 }
-
-.top-scroll-btn.glow-on-hover.btn-show {
-    opacity: 1;
-    visibility: visible;
-}
-
-#particles-js {
-    width: 100%;
-    height: 100%;
-    position:fixed;
-    z-index: 0;
-    top: 0;
-    left: 0
-}
-
-#particles-js canvas {
-    /* display: block; */
-    -webkit-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
-    opacity: 1;
-    -webkit-transition: opacity .8s ease, -webkit-transform 1.4s ease;
-    transition: opacity .8s ease, transform 1.4s ease
-}
-
-li {
-    list-style: none;
-}
-
-a {
-    text-decoration: none;
-}
-
-.intro {
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 15rem;
-    margin-bottom: 30rem;
-    width: 70%;
-    left: 0;
-    right: 0;
-    position: relative;
-    background-color: transparent;
-    text-align: center;
-    font-size: 3.5rem;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #00eeff;
-}
-
-.intro h4 {
-    font-size: 2.5rem;
-    line-height: 3rem;
-}
-
-.glow-on-hover {
-    font-size: 2.5rem;
-    color: #00eeff;
-    width: 300px;
-    height: 90px;
-    border: none;
-    /* outline: none; */
-    background: #2c2f33;
-    cursor: pointer;
-    position: relative;
-    z-index: 0;
-    border-radius: 10px;
-}
-
-.glow-on-hover:before {
-    content: '';
-    background: #00eeff;
-    position: absolute;
-    top: -2px;
-    left:-2px;
-    background-size: 400%;
-    z-index: -1;
-    filter: blur(5px);
-    width: calc(100% + 4px);
-    height: calc(100% + 4px);
-    animation: glowing 20s linear infinite;
-    opacity: 0;
-    transition: opacity .3s ease-in-out;
-    -moz-transition: opacity .3s ease-out;
-    -o-transition: opacity .3s ease-out;
-    -webkit-transition: opacity .3s ease-out;
-    border-radius: 10px;
-}
-
-.glow-on-hover:active {
-    color: #2c2f33
-}
-
-.glow-on-hover:active:after {
-    background: transparent;
-}
-
-.glow-on-hover:hover:before {
-    opacity: 1;
-}
-
-.glow-on-hover:after {
-    z-index: -1;
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #2c2f33;
-    left: 0;
-    top: 0;
-    border-radius: 10px;
-}
-
-@keyframes glowing {
-    0% { background-position: 0 0; }
-    50% { background-position: 400% 0; }
-    100% { background-position: 0 0; }
-}
-
-@media only screen and (max-width: 768px) {
-    .main-page {
-        transition: 0.8s;
-    }
-
-    .main-page.active {
-        position: relative;
-        margin-top: 30rem;
-        transition: 0.25s;
-    }
-
-    .intro {
-        margin-top: 10rem;
-        margin-bottom: 15rem;
-    }
-
-    .intro h1 {
-        font-size: 3rem;
-    }
-
-    .intro h4 {
-        font-size: 1.75rem;
-        line-height: 2.5rem;
-    }
-
-    .glow-on-hover {
-        width: 220px;
-    }
-
-    .top-scroll-btn.glow-on-hover {
-        width: 3.5rem;
-        height: 3.5rem;
-        bottom: 1.5rem;
-        right: 1.5rem;
-    }
-}
+/*# sourceMappingURL=style.css.map */

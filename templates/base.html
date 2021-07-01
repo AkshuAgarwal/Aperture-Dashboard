@@ -1,0 +1,115 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="keywords" content="Discord, Aperture, Discord Bot, Bot, Python, Aperture Bot">
+        <meta name="description" content="Dashboard for Aperture - A Discord Bot">
+        <meta name="author" content="Akshu Agarwal">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+        <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+        
+        {% block stylesheets %}{% endblock stylesheets %}
+        <title>{% block title %}{% endblock title %}</title>
+
+    </head>
+    <body>
+        <noscript><meta http-equiv="Refresh" content="0; URL=/noscript/"></noscript>
+        
+        <header>
+            <nav id="topnav">
+                <div id="nav-left">
+                    <div class="nav-left-left">
+                        <img src="{% static 'images/aperture.png' %}" alt="Logo" srcset="" id="nav-left-logo">
+                        <p>Aperture</p>
+                    </div>
+                    <div id="ham-right">
+
+                        {% if logged_in is True %}
+                            <img src={{ avatar }} alt="Avatar" srcset="" id="avatar">
+                        {% endif %}
+
+                        <div id="hamburger">
+                            <input type="checkbox" id="hamburger-checkbox" onclick="hamburgerActivate()">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="nav-right">
+                    <ul id="nav-list">
+                        <li class="nav-item">
+                            <a href="/commands" class="nav-link">Commands</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/invite" class="nav-link">Invite</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/support" class="nav-link">Support</a>
+                        </li>
+
+                        {% if logged_in is True %}
+                            <div id="nav-logged-in">
+                                <button onclick="dropdownActive()" id="dropdown-button">
+                                    <button id="dropdown-inner-button">
+                                        <img src={{ avatar }} alt="Avatar">
+                                        <i class="fa">&#xf0d7;</i>
+                                    </button>
+                                </button>
+                                <div id="nav-dropdown">
+
+                                    {% block dropdownitems %}{% endblock dropdownitems %}
+
+                                    <li class="nav-item">
+                                        <a href="/logout" class="nav-link">Logout</a>
+                                    </li>
+                                </div>
+                            </div>
+                        {% else %}
+                            <li class="nav-item nav-item-login">
+                                <a href="/login" class="nav-link">Login</a>
+                            </li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        
+        {% block main %}{% endblock main %}
+
+        <footer id="footer">
+            <div id="footer-top">
+                <div id="footer-top-left">
+                    <h2>ABOUT</h2>
+                    <p>
+                        Aperture is a Multi-purpose Discord Bot made with the scope to
+                        provide maximum features in a Single Bot and make Discord Servers
+                        more Fun and Enjoyable Place.
+                    </p>
+                </div>
+                <div id="footer-top-right">
+                    <h2>QUICK LINKS</h2>
+                    <div id="footer-links">
+                        <a href="/about">About</a>
+                        <a href="/invite">Invite</a>
+                        <a href="/support">Support</a>
+                        <a href="/contact">Contact Us</a>
+                        <a href="/privacy-policy">Privacy Policy</a>
+                        <a href="/terms-of-use">Terms of Use</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        {% block scripts %}{% endblock scripts %}
+
+    </body>
+</html>

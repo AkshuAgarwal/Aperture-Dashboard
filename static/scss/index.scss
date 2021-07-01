@@ -1,0 +1,91 @@
+@import "./variables";
+
+#main {
+    margin-top: 150px;
+    margin-bottom: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+    position: relative;
+    margin-bottom: 100px;
+}
+
+#main-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    background-color: $boxcolor;
+    color: $txtcolor;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    h1 {
+        font-size: 50px;
+        margin: 0 0 15px 0;
+    }
+    p {
+        font-size: 18px;
+        margin-bottom: 45px;
+        line-height: 30px;
+    }
+}
+
+#invite-button {
+    font-size: 25px;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.glow-on-hover {
+    // z-index: 5;
+    cursor: pointer;
+    position: relative;
+    color: $txtcolor;
+    background-color: $bgcolor;
+    border-color: $txtcolor;
+    &:hover {
+        transition: all 0.2s ease;
+        color: $bgcolor;
+        background-color: $txtcolor;
+        border-color: $boxcolor;
+    }
+}
+
+@media #{$extra-large-devices} {
+    #main {
+        margin-top: 250px;
+    }
+    #main-intro {
+        width: 60%;
+        padding: 60px;
+        p {
+            font-size: 25px;
+            margin-bottom: 55px;
+        }
+    }
+    #invite-button {
+        font-size: 30px;
+    }
+}
+
+@media #{$large-devices} {}
+
+@media #{$medium-devices} {
+    #main-intro {
+        width: 52%;
+    }
+}
+
+@media #{$small-devices} {
+    #main-intro {
+        width: 60%;
+    }
+}
+
+@media #{$extra-small-devices} {
+    #main-intro {
+        width: 55%;
+    }
+}
