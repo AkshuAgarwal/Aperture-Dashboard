@@ -11,8 +11,13 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import os
+import sys
+import asyncio
 from pathlib import Path
 from dotenv import load_dotenv
+
+if sys.version_info[0] == 3 and sys.version_info[1] >= 7 and sys.platform.startswith('win'):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 load_dotenv('./.env')
 
@@ -24,10 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z)$d&i=y82-qwe40--w+)2tk5uu_n$hkyg64%5=u@1#m(i2vyx'
+SECRET_KEY = os.getenv('DJANGO_SECURE_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.getenv('DEBUG') == "True" else False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -134,8 +139,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# Added Manually
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]

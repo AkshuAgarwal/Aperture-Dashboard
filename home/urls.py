@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include
-from home import views
+from . import views
 
 urlpatterns = [
-    path('', views.index, name='home'),
-    path('invite', views.invite, name='invite'),
-    path('support', views.support, name='support'),
-    path('login', views.login, name='login'),
-    path('callback', views.callback, name='callback'),
-    path('dashboard', views.dashboard, name='dashboard'),
-    path('logout', views.logout, name='logout')
+    path('', views.main, name='main'),
+    path('home/', views.index, name='home'),
+    path('login/', views.login, name='login'),
+    path('callback/', views.callback, name='callback'),
+    path('dashboard/', include('dashboard.urls')),
+    path('logout/', views.logout, name='logout'),
+    path('cookiedisabled/', views.cookiedisabled, name='cookie_disabled'),
+    path('noscript/', views.noscript, name='noscript'),
 ]

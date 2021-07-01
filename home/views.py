@@ -1,150 +1,130 @@
-from django.shortcuts import render, HttpResponse, redirect
-import requests
-import datetime
+import os
+import asyncio
+import httpx
+from dotenv import load_dotenv
+from datetime import datetime, timedelta
 
-simple_invite_link = 'https://discord.com/api/oauth2/authorize?client_id=842032214761537589&permissions=8&scope=bot%20applications.commands'
-login_invite_link = 'https://discord.com/api/oauth2/authorize?client_id=842032214761537589&permissions=8&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fcallback&response_type=code&scope=identify%20guilds%20bot%20applications.commands'
-login_link = 'https://discord.com/api/oauth2/authorize?client_id=842032214761537589&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fcallback&response_type=code&scope=identify%20guilds'
-support_link = 'https://www.google.com/'
+from django.shortcuts import render, redirect, HttpResponse
 
+from django_utils import get_session_data, set_session, delete_session
+
+load_dotenv('./.env')
+
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 API_ENDPOINT = 'https://discord.com/api'
-TOKEN_URL = 'https://discord.com/api/oauth2/token'
-USER_ENDPOINT = "https://discord.com/api/users/@me"
-CLIENT_ID = 842032214761537589
-CLIENT_SECRET = 'vBZh85gzwO_GORlNZ686kw9F7g1qbX20'
+TOKEN_ENDPOINT = 'https://discord.com/api/oauth2/token'
+USER_ENDPOINT = 'https://discord.com/api/users/@me'
 REDIRECT_URI = 'http://127.0.0.1:8000/callback'
-SCOPE = 'identify%20guilds'
+SCOPE = 'identify%20email%20guilds'
+OAUTH2_URL = f'https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fcallback&response_type=code&scope=identify%20email%20guilds'
 
 
-def exchange_code(code):
-    payload = {
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
-        "grant_type": "authorization_code",
-        "code": code,
-        "redirect_uri": REDIRECT_URI,
-        "scope": SCOPE
+def main(request):
+    request.session.set_test_cookie()
+    return redirect('home/')
+
+@sync_to_async
+def manage_test_cookie(request):
+    if request.session.test_cookie_worked():
+        # try:
+        #     request.session.delete_test_cookie()
+        # except:
+        #     pass
+        return True
+    else:
+        return False
+
+async def index(request):
+    if await manage_test_cookie(request) is False:
+        return redirect('/cookiedisabled/')
+
+    context = {
+        'logged_in': False,
+        'avatar': None
     }
-    r = requests.post(TOKEN_URL, data=payload)
-    r.raise_for_status()
-    return r.json()
 
-def use_refresh_token(refresh_token):
-    payload = {
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
-        "grant_type": "refresh_token",
-        "refresh_token": refresh_token
+    _access_token = await get_session_data(request, 'ACCESS_TOKEN')
+    if _access_token:
+        _expires_on = await get_session_data(request, 'EXPIRES_ON')
+        _expires_on = datetime.strptime(_expires_on, '%Y-%m-%d %H:%M:%S.%f') if _expires_on else None
+
+        if _expires_on:
+            if (_expires_on - datetime.utcnow()).seconds > 43200:
+                context['logged_in'] = True
+                headers = {"Authorization": f"Bearer {_access_token}"}
+                resp = httpx.get(USER_ENDPOINT, headers=headers)
+                resp.raise_for_status()
+                data = resp.json()
+
+                if not data['avatar']:
+                    context['avatar'] = f'https://cdm.discordapp.com/embed/avatars/{int(data["discriminator"]) % 5}.png'
+                elif str(data['avatar']).startswith('a_'):
+                    context['avatar'] = f'https://cdn.discordapp.com/avatars/{data["id"]}/{data["avatar"]}.gif'
+                else:
+                    context['avatar'] = f'https://cdn.discordapp.com/avatars/{data["id"]}/{data["avatar"]}.png'
+
+    return render(request, 'home/index.html', context)
+
+async def login(request):
+    if await manage_test_cookie(request) is False:
+        return redirect('/cookiedisabled/')
+
+    _access_token = await get_session_data(request, 'ACCESS_TOKEN')
+    if _access_token:
+        _expires_on = await get_session_data(request, 'EXPIRES_ON')
+        _expires_on = datetime.strptime(_expires_on, '%Y-%m-%d %H:%M:%S.%f') if _expires_on else None
+
+        if _expires_on:
+            if (_expires_on - datetime.utcnow()).seconds > 43200:
+                return redirect('/dashboard/')
+
+    _refresh_token = await get_session_data(request, 'REFRESH_TOKEN')
+    if _refresh_token:
+        data = {
+            'client_id': CLIENT_ID,
+            'client_secret': CLIENT_SECRET,
+            'grant_type': 'refresh_token',
+            'refresh_token':_refresh_token
+        }
+        resp = httpx.post(TOKEN_ENDPOINT, data=data)
+        resp.raise_for_status()
+        _resp_content = resp.json()
+
+        await set_session(request, 'ACCESS_TOKEN', _resp_content['access_token'])
+        await set_session(request, 'EXPIRES_ON', datetime.utcnow() + timedelta(seconds=_resp_content['expires_in']))
+
+        return redirect('/dashboard/')
+
+    return redirect(OAUTH2_URL)
+
+async def callback(request):
+    _code = request.GET.get('code')
+    data = {
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'grant_type': 'authorization_code',
+        'code': _code,
+        'redirect_uri': REDIRECT_URI
     }
-    r = requests.post(TOKEN_URL, data=payload)
-    r.raise_for_status()
-    return r.json()
+    resp = httpx.post(TOKEN_ENDPOINT, data=data)
+    resp.raise_for_status()
+    _resp_content = resp.json()
 
-def get_user_data(access_token):
-    url = USER_ENDPOINT
-    headers = {"Authorization": f"Bearer {access_token}"}
-    r = requests.get(url=url, headers=headers)
-    r.raise_for_status()
-    return r.json()
+    _expiry_time = datetime.utcnow() + timedelta(seconds=_resp_content['expires_in'])
 
+    await set_session(request, 'ACCESS_TOKEN', _resp_content['access_token'])
+    await set_session(request, 'EXPIRES_ON', _expiry_time.strftime('%Y-%m-%d %H:%M:%S.%f'))
 
-# Create your views here.
-def index(request):
-    try:
-        time_cookie = request.COOKIES.get('logintime')
-        if time_cookie is not None:
-            login_time = datetime.datetime.strptime(request.COOKIES['logintime'], '%Y-%m-%d %H:%M:%S.%f')
-            if (datetime.datetime.utcnow() - login_time).seconds < 604000:
-                access_token = request.session['access_token']
-                user_object = get_user_data(access_token)
-                loggedin = True
-                context = {"loggedin": loggedin, "user_data": user_object}
-            else:
-                loggedin = False
-                context = {"loggedin": loggedin}
-        else:
-            loggedin = False
-            context = {"loggedin": loggedin}
-    except:
-        loggedin = False
-        context = {"loggedin": loggedin}
-    return render(request, 'index.html', context)
+    return redirect('/dashboard/')
 
-def invite(request):
-    try:
-        time_cookie = request.COOKIES.get('logintime')
-        if time_cookie is not None:
-            login_time = datetime.datetime.strptime(request.COOKIES['logintime'], '%Y-%m-%d %H:%M:%S.%f')
-            if (datetime.datetime.utcnow() - login_time).seconds < 604000:
-                return redirect(simple_invite_link)
-            else:
-                return redirect(login_invite_link)
-        else:
-            return redirect(login_invite_link)
-    except:
-        return redirect(login_invite_link)
+async def logout(request):
+    await delete_session(request, 'ACCESS_TOKEN')
+    await delete_session(request, 'EXPIRES_ON')
+    return redirect('/')
 
-def support(request):
-    return redirect(support_link)
+def noscript(request):
+    return render(request, 'utils/noscript.html')
 
-def login(request):
-    response = redirect(login_link)
-    try:
-        time_cookie = request.COOKIES.get('logintime')
-        if time_cookie is not None:
-            login_time = datetime.datetime.strptime(request.COOKIES['logintime'], '%Y-%m-%d %H:%M:%S.%f')
-            if (datetime.datetime.utcnow() - login_time).seconds < 604000:
-                access_token = request.session['access_token']
-                return redirect('/dashboard')
-            else:
-                return response
-        else:
-            return response
-    except:
-        return response
-
-def callback(request):
-    response = redirect('/dashboard')
-    time_cookie = request.COOKIES.get('logintime')
-    try:
-        try:
-            if time_cookie is not None:
-                refresh_token = request.session['refresh_token']
-                refresh_token_response = use_refresh_token(refresh_token)
-                access_token = request.session['access_token'] = refresh_token_response.get('access_token')
-                request.session['refresh_token'] = refresh_token_response.get('refresh_token')
-                response.set_cookie('logintime', datetime.datetime.utcnow())
-            else:
-                code = request.GET.get('code')
-                access_token_response = exchange_code(code)
-                request.session['access_token'] = access_token_response.get('access_token')
-                request.session['refresh_token'] = access_token_response.get('refresh_token')
-                response.set_cookie('logintime', datetime.datetime.utcnow())
-        except:
-            code = request.GET.get('code')
-            access_token_response = exchange_code(code)
-            request.session['access_token'] = access_token_response.get('access_token')
-            request.session['refresh_token'] = access_token_response.get('refresh_token')
-            response.set_cookie('logintime', datetime.datetime.utcnow())
-    except:
-        response = redirect('/')
-    return response
-
-def dashboard(request):
-    return HttpResponse("op")
-
-def logout(request):
-    response = redirect('/')
-    try:
-        time_cookie = request.COOKIES.get('logintime')
-        if time_cookie is not None:
-            response.delete_cookie('logintime')
-            try:
-                request.session.pop('access_token')
-            except:
-                pass
-            return response
-        else:
-            return response
-    except:
-        return response
+def cookiedisabled(request):
+    return render(request, 'utils/cookiedisabled.html')
